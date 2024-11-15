@@ -22,13 +22,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 
 public class ControladorCliente extends HttpServlet {
 
     String listar="vistas/listar.jsp";
     String cliente="vistas/clientes.jsp";
-    String add="vistas/add.jsp";
+    String add="vistas/AddCliente.jsp";
     String edit="vistas/edit.jsp";
 
     
@@ -63,6 +64,8 @@ public class ControladorCliente extends HttpServlet {
         }else if(action.equalsIgnoreCase("add")){
             acceso=add;
         }else if(action.equalsIgnoreCase("clientes")){
+            List<Cliente> listaClientes = dao.listar(); // Llama al método listar de ClienteDAO
+            request.setAttribute("clientes", listaClientes);
             acceso=cliente;
         }
         else if(action.equalsIgnoreCase("editar")){

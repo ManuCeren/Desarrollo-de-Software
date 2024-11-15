@@ -32,13 +32,13 @@ public class ClienteDAO implements CRUDCliente{
             rs=ps.executeQuery();
             while(rs.next()){
                 Cliente cli=new Cliente();
-                cli.setId_Cliente(rs.getInt("id_Cliente"));
-                cli.setNombre_Cliente(rs.getString("nombre_Cliente"));
-                cli.setApellido_Cliente(rs.getString("apellido_Cliente"));
+                cli.setIdCliente(rs.getInt("id_Cliente"));
+                cli.setNombreCliente(rs.getString("nombre_Cliente"));
+                cli.setApellidoCliente(rs.getString("apellido_Cliente"));
                 cli.setTelefono(rs.getString("telefono"));
                 cli.setCorreo(rs.getString ("correo"));
                 cli.setDireccion(rs.getString("direccion"));
-                cli.setFecha_Registro(rs.getString("fecha_Registro"));
+                cli.setFechaRegistro(rs.getString("fecha_Registro"));
                 list.add(cli);
             }
         } catch (Exception e) {
@@ -46,3 +46,4 @@ public class ClienteDAO implements CRUDCliente{
         return list;
     }
 }
+

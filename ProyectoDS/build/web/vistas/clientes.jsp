@@ -5,6 +5,7 @@
 --%>
 
 <!-- webapp/clientes.jsp -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -29,9 +30,9 @@
         <tbody>
             <c:forEach var="cliente" items="${clientes}">
                 <tr>
-                    <td>${cliente.id}</td>
-                    <td>${cliente.nombre}</td>
-                    <td>${cliente.apellido}</td>
+                    <td>${cliente.idCliente}</td>
+                    <td>${cliente.nombreCliente}</td>
+                    <td>${cliente.apellidoCliente}</td>
                     <td>${cliente.telefono}</td>
                     <td>${cliente.correo}</td>
                     <td>${cliente.direccion}</td>
@@ -42,6 +43,6 @@
     </table>
 
     <!-- Botón para agregar nuevo cliente -->
-    <button onclick="window.location.href='agregarCliente.jsp'">Agregar Cliente</button>
+    <button onclick="window.location.href='ControladorCliente?accion=add'">Agregar Cliente</button>
 </body>
 </html>
