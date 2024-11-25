@@ -57,5 +57,27 @@ public class EncuestaDAO implements CRUDEncuesta{
         }
         return false;
     }
+    @Override
+    public double calcularSatisfaccionPromedio() {
+        double porcentaje = 0.0;
+        String sql = "SELECT SUM(calificacion) AS sumaCalificaciones, COUNT(*) AS totalEncuestas FROM encuesta";
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int sumaCalificaciones = rs.getInt("sumaCalificaciones");
+                int totalEncuestas = rs.getInt("totalEncuestas");
+
+                if (totalEncuestas > 0) {
+                    int calificacionMaxima = 5; // Ajusta según el rango de calificaciones
+                    porcentaje = (double) sumaCalificaciones / (totalEncuestas * calificacionMaxima) * 100;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return porcentaje;
+    }
 }
 

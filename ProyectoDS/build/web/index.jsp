@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="ModeloDAO.ClienteDAO"%>
 <%@page import="ModeloDAO.RegistroLlamadasDAO"%>
+<%@page import="ModeloDAO.EncuestaDAO"%>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -125,24 +126,22 @@
 <!-- Contenido del Dashboard -->
     <section class="dashboard">
         <h1>Sistema de Llamadas</h1>
+        <%
+            RegistroLlamadasDAO dao1 = new RegistroLlamadasDAO();
+            ClienteDAO dao = new ClienteDAO();
+            EncuestaDAO dao2 = new EncuestaDAO();
+                    
+        %>
 
         <!-- Tarjetas de estadísticas -->
         <div class="stats">
             <div class="stat-card">
                 <i class="fas fa-phone"></i>
-                <h2>Total de Llamadas</h2>
-                <%
-                    RegistroLlamadasDAO dao1 = new RegistroLlamadasDAO();
-                    
-                %>
+                <h2>Total de Llamadas</h2>            
                 <p><%= dao1.contarLlamadas() %></p>
             </div>
 
             <div class="stat-card">
-                <%
-                    ClienteDAO dao = new ClienteDAO();
-                    
-                %>
                 <i class="fas fa-users"></i>
                 <h2>Total de Clientes</h2>
                 <p><%= dao.contarClientes() %></p>
@@ -150,8 +149,8 @@
 
             <div class="stat-card">
                 <i class="fas fa-smile"></i>
-                <h2>Satisfacción Promedio</h2>
-                <p>${satisfaccionPromedio}%</p>
+                <h2>Satisfacción Promedio</h2>               
+                <p><%= dao2.calcularSatisfaccionPromedio() %> %</p>
             </div>
         </div>
 
