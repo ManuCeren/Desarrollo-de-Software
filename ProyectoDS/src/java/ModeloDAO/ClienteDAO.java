@@ -7,6 +7,7 @@ import Modelo.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,58 @@ public class ClienteDAO implements CRUDCliente{
         } catch (Exception e) {
         }
         return list;
+    }
+    @Override
+    public int contarClientes() {
+        int totalClientes = 0; // Variable para almacenar el conteo
+        String sql = "SELECT COUNT(*) AS total FROM cliente"; // Consulta SQL para contar los registros
+        try {
+            // Establece la conexión
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                // Obtiene el conteo de clientes
+                totalClientes = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo de errores
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return totalClientes; // Devuelve el número total de clientes
+    }
+    @Override
+    public boolean add(Cliente cliente) {
+        String sql = "INSERT INTO cliente (nombre_Cliente, apellido_Cliente, telefono, correo, direccion, fecha_Registro) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            con = cn.getConnection(); // Establece conexión
+            ps = con.prepareStatement(sql);
+            ps.setString(1, cliente.getNombreCliente());
+            ps.setString(2, cliente.getApellidoCliente());
+            ps.setString(3, cliente.getTelefono());
+            ps.setString(4, cliente.getCorreo());
+            ps.setString(5, cliente.getDireccion());
+            ps.setString(6, cliente.getFechaRegistro());
+            ps.executeUpdate(); // Ejecuta la consulta
+            return true; // Indica que la operación fue exitosa
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo de excepciones
+            return false; // Indica que hubo un error
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 
