@@ -2,6 +2,9 @@
 package Controladores;
 
 import ModeloDAO.ClienteDAO;
+import ModeloDAO.RegistroLlamadasDAO;
+import jakarta.servlet.RequestDispatcher;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,18 +19,29 @@ public class DashboardController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("accion");
+
         try {
-            // Llama al método para contar clientes
-            int totalClientes = clienteDAO.contarClientes();
+            if (action == null || action.equalsIgnoreCase("dashboard")) {
+                // Llama al método de conteo de clientes
+                ClienteDAO clienteDAO = new ClienteDAO();
+                int totalClientes = clienteDAO.contarClientes();
+                request.setAttribute("totalClientes", totalClientes);
 
-            // Pasa el resultado al JSP
-            request.setAttribute("totalClientes", totalClientes);
+                // Llama al método de conteo de llamadas (similar al anterior)
+                /*RegistroLlamadasDAO llamadasDAO = new RegistroLlamadasDAO();
+                int totalLlamadas = llamadasDAO.contarLlamadas();
+                request.setAttribute("totalLlamadas", totalLlamadas);*/
 
-            // Redirige al JSP del dashboard
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+                // Aquí puedes incluir más estadísticas si es necesario.
+
+                // Redirige al JSP del dashboard
+                RequestDispatcher dispatcher = request.getRequestDispatcher("vistas/dashboard.jsp");
+                dispatcher.forward(request, response);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al cargar el dashboard");
+            response.sendRedirect("vistas/error.jsp");
         }
     }
 }

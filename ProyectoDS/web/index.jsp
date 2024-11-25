@@ -1,5 +1,6 @@
 <!-- webapp/index.jsp -->
 <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -134,12 +135,13 @@
             <div class="stat-card">
                 <i class="fas fa-users"></i>
                 <h2>Total de Clientes</h2>
-                <p>${totalClientes}</p>
+                <p>Total de Clientes: ${totalClientes}</p>
             </div>
 
             <div class="stat-card">
                 <i class="fas fa-smile"></i>
                 <h2>Satisfacción Promedio</h2>
+                <c:out value="${totalClientes}" />
                 <p>${satisfaccionPromedio}%</p>
             </div>
         </div>

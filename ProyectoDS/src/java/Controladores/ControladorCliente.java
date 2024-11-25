@@ -57,7 +57,15 @@ public class ControladorCliente extends HttpServlet {
 
         try {
             if (action == null) {
-                response.sendRedirect("index.jsp"); // Redirige a la página de inicio si no se pasa acción.
+                 ClienteDAO clienteDAO = new ClienteDAO();
+                int totalClientes = clienteDAO.contarClientes();
+
+                // Configura el atributo para hacerlo visible en el JSP
+                request.setAttribute("totalClientes", totalClientes);
+
+                // Redirige al index.jsp
+                RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+                dispatcher.forward(request, response);
                 return;
             }
 
@@ -67,8 +75,14 @@ public class ControladorCliente extends HttpServlet {
                     break;
 
                 case "clientes":
-                    List<Cliente> listaClientes = dao.listar(); // Llama al método listar de ClienteDAO
+                    // Llama al método listar de ClienteDAO
+                    List<Cliente> listaClientes = dao.listar();
                     request.setAttribute("clientes", listaClientes);
+
+                    // Llama al método de conteo de clientes
+                    int totalClientes = dao.contarClientes();
+                    request.setAttribute("totalClientes", totalClientes);
+
                     acceso = cliente;
                     break;
 
@@ -90,8 +104,8 @@ public class ControladorCliente extends HttpServlet {
         // Redirige a la vista correspondiente
         RequestDispatcher vista = request.getRequestDispatcher(acceso);
         vista.forward(request, response);
-        
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

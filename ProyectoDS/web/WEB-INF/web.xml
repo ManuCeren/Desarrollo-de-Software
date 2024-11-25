@@ -3,8 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+        <servlet>
+            <servlet-name>DashboardController</servlet-name>
+            <servlet-class>Controladores.DashboardController</servlet-class>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>DashboardController</servlet-name>
+            <url-pattern>/dashboard</url-pattern>
+        </servlet-mapping>
 
-    <!-- Configuración del servlet ControladorCliente -->
+    <!-- Configuración de servlets -->
     <servlet>
         <servlet-name>ControladorCliente</servlet-name>
         <servlet-class>Controladores.ControladorCliente</servlet-class>
@@ -14,7 +22,6 @@
         <url-pattern>/ControladorCliente</url-pattern>
     </servlet-mapping>
     
-    <!-- Configuración del servlet ControladorEncuesta -->
     <servlet>
         <servlet-name>ControladorEncuesta</servlet-name>
         <servlet-class>Controladores.ControladorEncuesta</servlet-class>
@@ -24,7 +31,6 @@
         <url-pattern>/ControladorEncuesta</url-pattern>
     </servlet-mapping>
     
-    <!-- Configuración del servlet ControladorRegistro -->
     <servlet>
         <servlet-name>ControladorRegistro</servlet-name>
         <servlet-class>Controladores.ControladorRegistro</servlet-class>
@@ -34,21 +40,10 @@
         <url-pattern>/ControladorRegistro</url-pattern>
     </servlet-mapping>
     
-    <!-- Configuración del servlet DashboardController -->
-    <servlet>
-        <servlet-name>DashboardController</servlet-name>
-        <servlet-class>Controladores.DashboardController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DashboardController</servlet-name>
-        <url-pattern>/dashboard</url-pattern>
-    </servlet-mapping>
 
     <!-- Configuración de la sesión -->
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 
     <!-- Archivos de bienvenida -->
@@ -57,3 +52,4 @@
     </welcome-file-list>
 
 </web-app>
+

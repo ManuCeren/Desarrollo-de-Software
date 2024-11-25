@@ -48,30 +48,28 @@ public class ClienteDAO implements CRUDCliente{
     }
     @Override
     public int contarClientes() {
-        int totalClientes = 0; // Variable para almacenar el conteo
-        String sql = "SELECT COUNT(*) AS total FROM cliente"; // Consulta SQL para contar los registros
-        try {
-            // Establece la conexión
-            con = cn.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                // Obtiene el conteo de clientes
-                totalClientes = rs.getInt("total");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de errores
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (con != null) con.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+    String sql = "SELECT COUNT(*) AS total FROM cliente";
+    int totalClientes = 0;
+    try {
+        con = cn.getConnection();
+        ps = con.prepareStatement(sql);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            totalClientes = rs.getInt("total");
         }
-        return totalClientes; // Devuelve el número total de clientes
+    } catch (Exception e) {
+        e.printStackTrace(); // Mostrar el error en consola
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    return totalClientes;
+}
     @Override
     public boolean add(Cliente cliente) {
         String sql = "INSERT INTO cliente (nombre_Cliente, apellido_Cliente, telefono, correo, direccion, fecha_Registro) VALUES (?, ?, ?, ?, ?, ?)";
