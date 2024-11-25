@@ -9,5 +9,6 @@ public interface CRUDAgente {
      public List<Agente> listar();
      public boolean actualizar(Agente agente);
      public boolean eliminar(int idAgente);
+     public Agente buscarPorId(int idAgente);
 
 }

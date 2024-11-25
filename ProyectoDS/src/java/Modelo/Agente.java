@@ -8,18 +8,22 @@ public class Agente {
     private String apellidoAgente;
     private String turno;
     private int idDepartamento;
+    private String nombreDepartamento;
 
     // Constructor vacío
     public Agente() {}
 
+
     // Constructor con parámetros
-    public Agente(int idAgente, String nombreAgente, String apellidoAgente, String turno, int idDepartamento) {
+    public Agente(int idAgente, String nombreAgente, String apellidoAgente, String turno, int idDepartamento, String nombreDepartamento) {
         this.idAgente = idAgente;
         this.nombreAgente = nombreAgente;
         this.apellidoAgente = apellidoAgente;
         this.turno = turno;
         this.idDepartamento = idDepartamento;
+        this.nombreDepartamento = nombreDepartamento;
     }
+   
 
     // Métodos Getters y Setters
     public int getIdAgente() {
@@ -61,5 +65,13 @@ public class Agente {
     public void setIdDepartamento(int idDepartamento) {
         this.idDepartamento = idDepartamento;
     }
+        public String getNombreDepartamento() {
+        return nombreDepartamento;
+    }
+
+    public void setNombreDepartamento(String nombreDepartamento) {
+        this.nombreDepartamento = nombreDepartamento;
+    }
+
 }
 

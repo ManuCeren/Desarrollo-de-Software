@@ -119,7 +119,7 @@
             <li><a href="ControladorCliente?accion=clientes">Clientes</a></li>
             <li><a href="ControladorRegistro?accion=listar">Registro de Llamadas</a></li>
             <li><a href="ControladorEncuesta?accion=listar">Encuestas</a></li>
-            <li><a href="agentes">Agentes</a></li>
+            <li><a href="ControladorAgente?accion=agente">Agentes</a></li>
             <li><a href="tickets">Tickets</a></li>
         </ul>
     </nav>
