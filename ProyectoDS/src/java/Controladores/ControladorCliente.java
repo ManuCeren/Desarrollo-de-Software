@@ -7,6 +7,7 @@ package Controladores;
 
 import Modelo.Cliente;
 import ModeloDAO.ClienteDAO;
+import ModeloDAO.RegistroLlamadasDAO;
 
 
 import jakarta.servlet.RequestDispatcher;
@@ -62,6 +63,10 @@ public class ControladorCliente extends HttpServlet {
 
                 // Configura el atributo para hacerlo visible en el JSP
                 request.setAttribute("totalClientes", totalClientes);
+                RegistroLlamadasDAO llamadasDAO = new RegistroLlamadasDAO();
+                
+                int totalLlamadas = llamadasDAO.contarLlamadas();
+                request.setAttribute("totalLlamadas", totalLlamadas);
 
                 // Redirige al index.jsp
                 RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");

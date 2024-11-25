@@ -49,6 +49,30 @@ public class RegistroLlamadasDAO implements CRUDRegistro {
         }
         return lista;
     }
+    @Override
+    public int contarLlamadas() {
+        String sql = "SELECT COUNT(*) AS total FROM registroLlamadas";
+        int totalLlamadas = 0;
+        try {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalLlamadas = rs.getInt("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Mostrar el error en consola
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return totalLlamadas;
+    }
 
     // Agregar una nueva llamada
     @Override

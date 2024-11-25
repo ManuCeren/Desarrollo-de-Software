@@ -29,9 +29,9 @@ public class DashboardController extends HttpServlet {
                 request.setAttribute("totalClientes", totalClientes);
 
                 // Llama al método de conteo de llamadas (similar al anterior)
-                /*RegistroLlamadasDAO llamadasDAO = new RegistroLlamadasDAO();
+                RegistroLlamadasDAO llamadasDAO = new RegistroLlamadasDAO();
                 int totalLlamadas = llamadasDAO.contarLlamadas();
-                request.setAttribute("totalLlamadas", totalLlamadas);*/
+                request.setAttribute("totalLlamadas", totalLlamadas);
 
                 // Aquí puedes incluir más estadísticas si es necesario.
 

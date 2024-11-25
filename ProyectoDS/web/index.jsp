@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="ModeloDAO.ClienteDAO"%>
+<%@page import="ModeloDAO.RegistroLlamadasDAO"%>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -130,7 +131,11 @@
             <div class="stat-card">
                 <i class="fas fa-phone"></i>
                 <h2>Total de Llamadas</h2>
-                <p>${totalLlamadas}</p>
+                <%
+                    RegistroLlamadasDAO dao1 = new RegistroLlamadasDAO();
+                    
+                %>
+                <p><%= dao1.contarLlamadas() %></p>
             </div>
 
             <div class="stat-card">
