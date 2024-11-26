@@ -136,7 +136,7 @@
             <li><a href="ControladorRegistro?accion=listar">Registro de Llamadas</a></li>
             <li><a href="ControladorEncuesta?accion=listar">Encuestas</a></li>
             <li><a href="ControladorAgente?accion=agente">Agentes</a></li>
-            <li><a href="ControladorTicket?accion=ticket">Tickets</a></li>
+            <li><a href="ControladorTicket?accion=listar">Tickets</a></li>
         </ul>
     </nav>
 <!-- Contenido del Dashboard -->

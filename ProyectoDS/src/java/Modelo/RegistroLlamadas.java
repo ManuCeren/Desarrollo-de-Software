@@ -4,7 +4,7 @@ package Modelo;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;  // Importamos List para almacenar los seguimientos
+import java.util.List; 
 
 public class RegistroLlamadas {
     // Atributos

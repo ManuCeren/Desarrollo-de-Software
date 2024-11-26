@@ -4,10 +4,19 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/web/vistas/listarAgente.jsp</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/Controladores/ControladorTicket.java</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/Interfaces/CRUDTicket.java</file>
             <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/web/index.jsp</file>
-            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/web/vistas/Agente.jsp</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/Interfaces/CRUDRegistro.java</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/ModeloDAO/RegistroLlamadasDAO.java</file>
             <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/Controladores/ControladorAgente.java</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/web/vistas/DetallesAgente.jsp</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/Interfaces/CRUDAgente.java</file>
             <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/ModeloDAO/AgenteDAO.java</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/web/vistas/Agente.jsp</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/web/vistas/Ticket.jsp</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/Modelo/Ticket.java</file>
+            <file>file:/C:/Users/manue/OneDrive/Documentos/GitHub/Desarrollo%20de%20Software/ProyectoDS/src/java/ModeloDAO/TicketDAO.java</file>
         </group>
     </open-files>
 </project-private>

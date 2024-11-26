@@ -9,7 +9,7 @@ import java.util.List;
  * @author Manuel Ceren
  */
 public interface CRUDCliente {
-    public List listar();
+   public List<Cliente> listar();
     public int contarClientes();
     public boolean add(Cliente cliente);
     public Cliente list(int id);

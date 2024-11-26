@@ -34,36 +34,51 @@ public class ControladorRegistro extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
 
-        if ("listar".equalsIgnoreCase(accion)) {
-            listar(request, response);
-        } else if ("buscar".equalsIgnoreCase(accion)) {
-            buscarPorId(request, response);
-        } else if ("eliminar".equalsIgnoreCase(accion)) {
-            eliminar(request, response);
-        } else if ("seguimiento".equalsIgnoreCase(accion)) {
-            // Acción para gestionar los seguimientos
-            listarSeguimientos(request, response);
-        } else {
-            response.sendRedirect("vistas/Llamadas.jsp"); // Página predeterminada
+        switch (accion) {
+            case "listar":
+                listar(request, response);
+                break;
+                
+            case "editar":
+                editar(request, response);
+                break;
+            case "verHistorial":
+                verHistorial(request, response);
+                break;
+            case "eliminar":
+                eliminar(request, response);
+                break;
+            default:
+                response.sendRedirect("vistas/Llamadas.jsp");
+                break;
         }
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
 
-        if ("guardar".equalsIgnoreCase(accion)) {
-            guardar(request, response);
-        } else if ("guardarSeguimiento".equalsIgnoreCase(accion)) {
-            guardarSeguimiento(request, response);  // Acción para guardar un seguimiento
-        } else {
-            response.sendRedirect("ControladorRegistro?accion=listar");
+        switch (accion.toLowerCase()) {
+            case "guardar":
+                guardar(request, response);
+                break;
+            case "guardarSeguimiento":
+                guardarSeguimiento(request, response);
+                break;
+            case "actualizar":
+                actualizar(request, response);
+                break;
+            default:
+                response.sendRedirect("ControladorRegistro?accion=listar");
+                break;
         }
     }
 
     private void listar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         List<RegistroLlamadas> lista = daoLlamada.listar();
         request.setAttribute("listar", lista);
         RequestDispatcher dispatcher = request.getRequestDispatcher("vistas/Llamadas.jsp");
@@ -123,22 +138,27 @@ public class ControladorRegistro extends HttpServlet {
             response.sendRedirect("ControladorRegistro?accion=listar");
         }
     }
-
     private void guardar(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-        try {
-            RegistroLlamadas llamada = new RegistroLlamadas();
-            llamada.setFechaHoraLlamada(Timestamp.valueOf(request.getParameter("fechaHoraLlamada")));
-            llamada.setHoraInicio(Time.valueOf(request.getParameter("horaInicio")));
-            llamada.setHoraFinal(Time.valueOf(request.getParameter("horaFinal")));
-            llamada.setMotivoLlamada(request.getParameter("motivo"));
-            llamada.setSolucion(request.getParameter("solucion"));
-            llamada.setEstado(request.getParameter("estado"));
-            llamada.setIdCliente(Integer.parseInt(request.getParameter("idCliente")));
-            llamada.setIdAgente(Integer.parseInt(request.getParameter("idAgente")));
-            llamada.setIdCategoria(Integer.parseInt(request.getParameter("idCategoria")));
+        throws IOException {
+    try {
+        // Ajustar el formato de fecha y hora
+        String fechaHora = request.getParameter("fechaHoraLlamada").replace("T", " ") + ":00";
 
-            boolean guardado = daoLlamada.agregar(llamada);
+        RegistroLlamadas llamada = new RegistroLlamadas();
+        llamada.setFechaHoraLlamada(Timestamp.valueOf(fechaHora)); // Convertir correctamente
+        llamada.setHoraInicio(Time.valueOf(request.getParameter("horaInicio") + ":00")); // Agregar segundos
+        llamada.setHoraFinal(Time.valueOf(request.getParameter("horaFinal") + ":00")); // Agregar segundos
+        llamada.setMotivoLlamada(request.getParameter("motivo"));
+        llamada.setSolucion(request.getParameter("solucion"));
+        llamada.setEstado(request.getParameter("estado"));
+        llamada.setIdCliente(Integer.parseInt(request.getParameter("idCliente")));
+        llamada.setIdAgente(Integer.parseInt(request.getParameter("idAgente")));
+        llamada.setIdCategoria(Integer.parseInt(request.getParameter("idCategoria")));
+
+        // Llamar al DAO para guardar
+        boolean guardado = daoLlamada.agregar(llamada);
+
+
 
             if (guardado) {
                 response.sendRedirect("ControladorRegistro?accion=listar");
@@ -147,9 +167,88 @@ public class ControladorRegistro extends HttpServlet {
                 listar(request, response);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             response.sendRedirect("ControladorRegistro?accion=listar");
         }
     }
+    
+    private void verHistorial(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        try {
+            // Obtener el ID de la llamada desde la solicitud
+            int idLlamada = Integer.parseInt(request.getParameter("idLlamada"));
+
+            // Obtener la llamada específica
+            RegistroLlamadas llamada = daoLlamada.buscarPorId(idLlamada);
+
+            // Obtener el historial de seguimientos para la llamada
+            List<Seguimiento> historial = daoSeguimiento.listarPorLlamada(idLlamada);
+
+            // Configurar los atributos para la vista
+            request.setAttribute("llamada", llamada);
+            request.setAttribute("historial", historial);
+
+            // Redirigir a la vista del historial
+            RequestDispatcher dispatcher = request.getRequestDispatcher("vistas/HistorialLlamada.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("mensaje", "Error al obtener el historial de la llamada.");
+            response.sendRedirect("ControladorRegistro?accion=listar");
+        }
+    }
+    private void editar(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        String accion = request.getParameter("accion");
+
+        if ("editar".equalsIgnoreCase(accion)) {
+            try {
+                // Obtener el ID de la llamada desde los parámetros
+                int idLlamada = Integer.parseInt(request.getParameter("id"));
+
+                // Buscar la llamada en la base de datos
+                RegistroLlamadas llamada = daoLlamada.buscarPorId(idLlamada);
+
+                // Establecer la llamada como atributo para la vista
+                request.setAttribute("llamada", llamada);
+
+                // Redirigir a la vista de edición
+                RequestDispatcher dispatcher = request.getRequestDispatcher("vistas/EditarLlamada.jsp");
+                dispatcher.forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("mensaje", "Error al obtener los datos para editar.");
+                response.sendRedirect("ControladorRegistro?accion=listar");
+            }
+        }
+    }
+    private void actualizar(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        try {
+            // Obtener los datos enviados desde el formulario
+            int idLlamada = Integer.parseInt(request.getParameter("idLlamada"));
+            String estado = request.getParameter("estado"); // Valor del nuevo estado
+
+            // Actualizar el estado de la llamada
+            RegistroLlamadas llamada = daoLlamada.buscarPorId(idLlamada);
+            llamada.setEstado(estado); // Actualizar el estado
+
+            boolean actualizado = daoLlamada.actualizar(llamada);
+
+            if (actualizado) {
+                response.sendRedirect("ControladorRegistro?accion=listar");
+            } else {
+                request.setAttribute("mensaje", "Error al actualizar el estado de la llamada.");
+                response.sendRedirect("ControladorRegistro?accion=editar&id=" + idLlamada);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("ControladorRegistro?accion=listar");
+        }
+    }
+
+
+
 
     // Método para listar los seguimientos de una llamada
     private void listarSeguimientos(HttpServletRequest request, HttpServletResponse response)

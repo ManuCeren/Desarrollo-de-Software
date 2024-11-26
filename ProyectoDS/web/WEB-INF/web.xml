@@ -13,6 +13,10 @@
         <servlet-name>ControladorLlamada</servlet-name>
         <servlet-class>Controladores.ControladorLlamada</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ControladorLogin</servlet-name>
+        <servlet-class>Controladores.ControladorLogin</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DashboardController</servlet-name>
         <url-pattern>/dashboard</url-pattern>
@@ -58,11 +62,15 @@
         <servlet-name>ControladorLlamada</servlet-name>
         <url-pattern>/ControladorLlamada</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControladorLogin</servlet-name>
+        <url-pattern>/ControladorLogin</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
     <!-- Archivos de bienvenida -->
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>vistas/login.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

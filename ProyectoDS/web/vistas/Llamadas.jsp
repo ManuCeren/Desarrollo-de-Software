@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -14,17 +13,7 @@
 <body>
 <div class="container mt-4">
     <h1 class="text-center">Gestión de Llamadas</h1>
-    
-    <!-- Formulario de búsqueda por ID -->
-    <div class="mb-3">
-        <form id="buscarLlamadaForm" class="d-flex align-items-center">
-            <input type="text" id="idLlamada" class="form-control me-2" placeholder="Buscar llamada por ID" required>
-            <button class="btn btn-outline-secondary" type="button" id="buscarLlamadaBtn">
-                <i class="fas fa-search"></i> Buscar
-            </button>
-        </form>
-    </div>
-    
+
     <!-- Botón para agregar llamada -->
     <div class="mb-3">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLlamadaModal">Agregar Llamada</button>
@@ -56,86 +45,98 @@
                 <td>${llamada.estado}</td>
                 <td>
                     <!-- Botón "Ver" para mostrar detalles en modal -->
-                    <button class="btn btn-info btn-sm btn-ver" data-id="${llamada.idLlamada}">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <a href="ControladorRegistro?accion=editar&id=${llamada.idLlamada}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-pencil-alt"></i>
+                    <a href="ControladorRegistro?accion=verHistorial&idLlamada=${llamada.idLlamada}" 
+                        class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Ver
                     </a>
-                    <a href="ControladorRegistro?accion=eliminar&id=${llamada.idLlamada}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i>
+                    <a href="ControladorRegistro?accion=editar&id=${llamada.idLlamada}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-pencil-alt"></i> Editar
                     </a>
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
+    <button class="btn btn-secondary" onclick="window.location.href='index.jsp'">
+        <i class="fas fa-home"></i> Volver al Inicio
+    </button>
 
-    <!-- Modal para ver detalles de llamada -->
-    <div class="modal fade" id="verLlamadaModal" tabindex="-1" aria-labelledby="verLlamadaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="verLlamadaModalLabel">Detalles de Llamada</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Modal para agregar una nueva llamada -->
+<div class="modal fade" id="addLlamadaModal" tabindex="-1" aria-labelledby="addLlamadaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="ControladorRegistro" method="post">
+                <input type="hidden" name="accion" value="guardar">
+
+                <!-- Fecha y Hora -->
+                <div class="mb-3">
+                    <label for="fechaHoraLlamada" class="form-label">Fecha y Hora</label>
+                    <input type="datetime-local" class="form-control" id="fechaHoraLlamada" name="fechaHoraLlamada" required>
                 </div>
-                <div class="modal-body">
-                    <p><strong>ID Llamada:</strong> <span id="modalIdLlamada"></span></p>
-                    <p><strong>Fecha y Hora:</strong> <span id="modalFechaHora"></span></p>
-                    <p><strong>Hora Inicio:</strong> <span id="modalHoraInicio"></span></p>
-                    <p><strong>Hora Final:</strong> <span id="modalHoraFinal"></span></p>
-                    <p><strong>Motivo:</strong> <span id="modalMotivo"></span></p>
-                    <p><strong>Solución:</strong> <span id="modalSolucion"></span></p>
-                    <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
+
+                <!-- Hora Inicio -->
+                <div class="mb-3">
+                    <label for="horaInicio" class="form-label">Hora Inicio</label>
+                    <input type="time" class="form-control" id="horaInicio" name="horaInicio" required>
                 </div>
-            </div>
+
+                <!-- Hora Final -->
+                <div class="mb-3">
+                    <label for="horaFinal" class="form-label">Hora Final</label>
+                    <input type="time" class="form-control" id="horaFinal" name="horaFinal" required>
+                </div>
+
+                <!-- Motivo -->
+                <div class="mb-3">
+                    <label for="motivo" class="form-label">Motivo</label>
+                    <input type="text" class="form-control" id="motivo" name="motivo" required>
+                </div>
+
+                <!-- Solución -->
+                <div class="mb-3">
+                    <label for="solucion" class="form-label">Solución</label>
+                    <textarea class="form-control" id="solucion" name="solucion"></textarea>
+                </div>
+
+                <!-- Estado -->
+                <div class="mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select class="form-select" id="estado" name="estado" required>
+                        <option value="Abierta">Abierta</option>
+                        <option value="Cerrada">Cerrada</option>
+                    </select>
+                </div>
+
+                <!-- ID Cliente -->
+                <div class="mb-3">
+                    <label for="idCliente" class="form-label">ID Cliente</label>
+                    <input type="number" class="form-control" id="idCliente" name="idCliente" required>
+                </div>
+
+                <!-- ID Agente -->
+                <div class="mb-3">
+                    <label for="idAgente" class="form-label">ID Agente</label>
+                    <input type="number" class="form-control" id="idAgente" name="idAgente" required>
+                </div>
+
+                <!-- ID Categoría -->
+                <div class="mb-3">
+                    <label for="idCategoria" class="form-label">ID Categoría</label>
+                    <input type="number" class="form-control" id="idCategoria" name="idCategoria" required>
+                </div>
+
+                <!-- Botones -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- JavaScript para manejo de modal dinámico -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    // Manejo del botón "Ver" para cada llamada
-    document.querySelectorAll(".btn-ver").forEach(button => {
-        button.addEventListener("click", function () {
-            const idLlamada = this.getAttribute("data-id");
-            const loading = document.getElementById("modalLoading");
-            loading.style.display = "block"; // Mostrar indicador de carga
-
-            fetch(`ControladorRegistro?accion=buscar&idLlamada=${idLlamada}`)
-                .then(response => response.json())
-                .then(data => {
-                    loading.style.display = "none"; // Ocultar indicador de carga
-
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        // Llenar el modal con los datos obtenidos
-                        document.getElementById("modalIdLlamada").textContent = data.idLlamada;
-                        document.getElementById("modalFechaHora").textContent = data.fechaHoraLlamada;
-                        document.getElementById("modalHoraInicio").textContent = data.horaInicio;
-                        document.getElementById("modalHoraFinal").textContent = data.horaFinal;
-                        document.getElementById("modalMotivo").textContent = data.motivoLlamada;
-                        document.getElementById("modalSolucion").textContent = data.solucion;
-                        document.getElementById("modalEstado").textContent = data.estado;
-
-                        // Mostrar el modal
-                        const modal = new bootstrap.Modal(document.getElementById("verLlamadaModal"));
-                        modal.show();
-                    }
-                })
-                .catch(error => {
-                    loading.style.display = "none"; // Ocultar indicador de carga
-                    console.error("Error:", error);
-                });
-        });
-    });
-});
-
-</script>
 </body>
 </html>
+

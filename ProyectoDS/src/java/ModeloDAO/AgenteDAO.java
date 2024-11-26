@@ -3,6 +3,7 @@ package ModeloDAO;
 
 import Config.Conexion;
 import Modelo.Agente;
+import Modelo.RegistroLlamadas;
 import Interfaces.CRUDAgente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +17,7 @@ public class AgenteDAO implements CRUDAgente{
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
-    Agente ag = new Agente();
+    RegistroLlamadasDAO daoLlamadas = new RegistroLlamadasDAO();
 
     // Crear un agente
     @Override
@@ -102,24 +103,52 @@ public class AgenteDAO implements CRUDAgente{
     @Override
     public Agente buscarPorId(int idAgente) {
         Agente agente = null;
-        String sql = "SELECT a.*, d.nombre_Departamento FROM agente a INNER JOIN departamento d ON a.id_Departamento = d.id_Departamento WHERE a.id_Agente = ?";
-        try {
+        String sql = "SELECT * FROM agente WHERE id_Agente = ?";
+        try{
             con = cn.getConnection();
             ps = con.prepareStatement(sql);
+
             ps.setInt(1, idAgente);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                agente = new Agente();
-                agente.setIdAgente(rs.getInt("id_Agente"));
-                agente.setNombreAgente(rs.getString("nombre_Agente"));
-                agente.setApellidoAgente(rs.getString("apellido_Agente"));
-                agente.setTurno(rs.getString("turno"));
-                agente.setNombreDepartamento(rs.getString("nombre_Departamento"));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    agente = new Agente();
+                    agente.setIdAgente(rs.getInt("id_Agente"));
+                    agente.setNombreAgente(rs.getString("nombre"));
+                    agente.setApellidoAgente(rs.getString("apellido"));
+                    agente.setTurno(rs.getString("turno"));
+                    agente.setNombreDepartamento(rs.getString("departamento"));
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return agente;
     }
+    @Override
+    public List<RegistroLlamadas> listarPorAgente(int idAgente) {
+        List<RegistroLlamadas> lista = new ArrayList<>();
+        String sql = "SELECT * FROM registroLlamadas WHERE id_Agente = ?";
+        try (Connection con = cn.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idAgente);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    RegistroLlamadas llamada = new RegistroLlamadas();
+                    llamada.setIdLlamada(rs.getInt("id_Llamada"));
+                    llamada.setFechaHoraLlamada(rs.getTimestamp("fecha_Hora_Llamada"));
+                    llamada.setHoraInicio(rs.getTime("hora_Inicio"));
+                    llamada.setHoraFinal(rs.getTime("hora_Final"));
+                    llamada.setMotivoLlamada(rs.getString("motivoLlamada"));
+                    llamada.setSolucion(rs.getString("solucion"));
+                    llamada.setEstado(rs.getString("estado"));
+                    lista.add(llamada);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
 }
 

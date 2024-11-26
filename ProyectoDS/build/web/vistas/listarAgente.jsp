@@ -44,17 +44,10 @@
                     <td>${agente.nombreDepartamento}</td>
                     <td>
                         <!-- Botón para mostrar detalles -->
-                        <button class="btn btn-info btn-sm btn-detalle" data-id="${agente.idAgente}">
+                        <a href="ControladorAgente?accion=verDetalles&id=${agente.idAgente}" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i> Ver Detalles
-                        </button>
-                        <!-- Botón para editar agente -->
-                        <a href="ControladorAgente?accion=editar&id=${agente.idAgente}" class="btn btn-warning btn-sm">
-                            <i class="fas fa-pencil-alt"></i> Editar
                         </a>
-                        <!-- Botón para eliminar agente -->
-                        <a href="ControladorAgente?accion=eliminar&id=${agente.idAgente}" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i> Eliminar
-                        </a>
+
                     </td>
                 </tr>
             </c:forEach>

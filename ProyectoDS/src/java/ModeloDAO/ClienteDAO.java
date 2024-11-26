@@ -21,28 +21,30 @@ public class ClienteDAO implements CRUDCliente{
     Cliente c=new Cliente();
     
     @Override
-    public List listar() {
-        ArrayList<Cliente>list=new ArrayList<>();
-        String sql="select * from cliente";
+    public List<Cliente> listar() {  // Especifica el tipo genérico List<Cliente>
+        List<Cliente> list = new ArrayList<>();  // Especifica que la lista es de tipo Cliente
+        String sql = "SELECT * FROM cliente";
         try {
-            con=cn.getConnection();
-            ps=con.prepareStatement(sql);
-            rs=ps.executeQuery();
-            while(rs.next()){
-                Cliente cli=new Cliente();
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Cliente cli = new Cliente();
                 cli.setIdCliente(rs.getInt("id_Cliente"));
                 cli.setNombreCliente(rs.getString("nombre_Cliente"));
                 cli.setApellidoCliente(rs.getString("apellido_Cliente"));
                 cli.setTelefono(rs.getString("telefono"));
-                cli.setCorreo(rs.getString ("correo"));
+                cli.setCorreo(rs.getString("correo"));
                 cli.setDireccion(rs.getString("direccion"));
                 cli.setFechaRegistro(rs.getString("fecha_Registro"));
-                list.add(cli);
+                list.add(cli);  // Agrega el cliente a la lista
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
-        return list;
+        return list;  // Devuelve la lista de clientes
     }
+
     @Override
     public int contarClientes() {
     String sql = "SELECT COUNT(*) AS total FROM cliente";

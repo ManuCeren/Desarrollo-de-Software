@@ -14,6 +14,8 @@
     <title>Gestión de Clientes</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #eef2f3;
@@ -132,8 +134,18 @@
                 </c:forEach>
             </tbody>
         </table>
+        <div class="d-flex justify-content-center mb-4">
+            <button onclick="window.location.href='ControladorCliente?accion=add'">
+                <i class="fa-solid fa-user-plus"></i>Agregar Cliente
+            </button>
+
+            <button onclick="window.location.href='index.jsp'">
+                <i class="fas fa-home"></i> Volver al Inicio
+            </button>
+        </div>
          <!-- Botón para agregar nuevo cliente -->
-        <button onclick="window.location.href='ControladorCliente?accion=add'">Agregar Cliente</button>    
+           
+        
     </div>
     
    
