@@ -26,7 +26,7 @@ public class ControladorCliente extends HttpServlet {
     String listar="vistas/listar.jsp";
     String cliente="vistas/clientes.jsp";
     String add="vistas/AddCliente.jsp";
-    String edit="vistas/edit.jsp";
+    String edit="vistas/editCliente.jsp";
 
     
     Cliente c =new Cliente();
@@ -93,8 +93,28 @@ public class ControladorCliente extends HttpServlet {
 
                 case "editar":
                     // Obtiene el ID del cliente a editar
-                    request.setAttribute("idper", request.getParameter("id"));
+                    request.setAttribute("idcli", request.getParameter("id"));
                     acceso = edit;
+                    break;
+                    
+                case "Actualizar":
+                    // Obtiene el ID del cliente a editar
+                        id=Integer.parseInt(request.getParameter("txtid"));
+                        String nom=request.getParameter("txtNom");
+                        String ape=request.getParameter("txtApe");
+                        String tel=request.getParameter("txtTel");
+                        String email=request.getParameter("txtCorreo");
+                        String direc=request.getParameter("txtdireccion");
+                        String fecha=request.getParameter("txtfecha");
+                        c.setIdCliente(id);
+                        c.setNombreCliente(nom);
+                        c.setApellidoCliente(ape);
+                        c.setTelefono(tel);
+                        c.setCorreo(email);
+                        c.setDireccion(direc);
+                        c.setFechaRegistro(fecha);
+                        dao.edit(c);
+                        acceso=listar;
                     break;
 
                 default:
@@ -146,7 +166,7 @@ public class ControladorCliente extends HttpServlet {
                 request.setAttribute("mensaje", "Error al agregar el cliente.");
             }
 
-            acceso = "vistas/listar.jsp"; // Después de agregar, se puede redirigir a la lista de clientes
+            acceso = "vistas/clientes.jsp"; // Después de agregar, se puede redirigir a la lista de clientes
         }
 
         RequestDispatcher vista = request.getRequestDispatcher(acceso);

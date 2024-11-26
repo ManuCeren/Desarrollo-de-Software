@@ -4,10 +4,7 @@ package ModeloDAO;
 import Config.Conexion;
 import Interfaces.CRUDCliente;
 import Modelo.Cliente;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +92,49 @@ public class ClienteDAO implements CRUDCliente{
                 e.printStackTrace();
             }
         }
+    }
+    @Override
+    public Cliente list(int id) {
+        String sql="select * from cliente where id_Cliente="+id;
+        try {
+            con=cn.getConnection();
+            ps=con.prepareStatement(sql);
+            rs=ps.executeQuery();
+            while(rs.next()){ 
+                c.setIdCliente(rs.getInt("id_Cliente"));
+                c.setNombreCliente(rs.getString("nombre_Cliente"));
+                c.setApellidoCliente(rs.getString("apellido_Cliente"));
+                c.setTelefono(rs.getString("telefono"));
+                c.setCorreo(rs.getString("correo"));
+                c.setDireccion(rs.getString("direccion"));
+                c.setFechaRegistro(rs.getString("fecha_Registro"));
+                
+            }
+        } catch (Exception e) {
+        }
+        return c;
+    }
+    @Override
+    public boolean eliminar(int id) {
+        String sql="delete from cliente where id_Cliente="+id;
+        try {
+            con=cn.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+        }
+        return false;
+    }
+    @Override
+    public boolean edit(Cliente cli) {
+        String sql="update cliente set nombre_Cliente='"+cli.getNombreCliente()+"',apellido_Cliente='"+cli.getApellidoCliente()+"', telefono='"+cli.getTelefono() +"', correo='"+cli.getCorreo()+"',direccion='"+cli.getDireccion()+"',fecha_Registro='"+cli.getFechaRegistro()+"'where id_Cliente="+cli.getIdCliente();
+        try {
+            con=cn.getConnection();
+            ps=con.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+        }
+        return false;
     }
 }
 

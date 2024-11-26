@@ -6,7 +6,9 @@
 package Controladores;
 
 import Modelo.RegistroLlamadas;
+import Modelo.Seguimiento;
 import ModeloDAO.RegistroLlamadasDAO;
+import ModeloDAO.SeguimientoDAO;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -24,7 +26,8 @@ import java.util.List;
 @WebServlet(name = "ControladorRegistro", urlPatterns = {"/ControladorRegistro"})
 public class ControladorRegistro extends HttpServlet {
 
-    RegistroLlamadasDAO dao = new RegistroLlamadasDAO();
+    RegistroLlamadasDAO daoLlamada = new RegistroLlamadasDAO();
+    SeguimientoDAO daoSeguimiento = new SeguimientoDAO();  // DAO para manejar seguimientos
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,6 +40,9 @@ public class ControladorRegistro extends HttpServlet {
             buscarPorId(request, response);
         } else if ("eliminar".equalsIgnoreCase(accion)) {
             eliminar(request, response);
+        } else if ("seguimiento".equalsIgnoreCase(accion)) {
+            // Acción para gestionar los seguimientos
+            listarSeguimientos(request, response);
         } else {
             response.sendRedirect("vistas/Llamadas.jsp"); // Página predeterminada
         }
@@ -49,6 +55,8 @@ public class ControladorRegistro extends HttpServlet {
 
         if ("guardar".equalsIgnoreCase(accion)) {
             guardar(request, response);
+        } else if ("guardarSeguimiento".equalsIgnoreCase(accion)) {
+            guardarSeguimiento(request, response);  // Acción para guardar un seguimiento
         } else {
             response.sendRedirect("ControladorRegistro?accion=listar");
         }
@@ -56,7 +64,7 @@ public class ControladorRegistro extends HttpServlet {
 
     private void listar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<RegistroLlamadas> lista = dao.listar();
+        List<RegistroLlamadas> lista = daoLlamada.listar();
         request.setAttribute("listar", lista);
         RequestDispatcher dispatcher = request.getRequestDispatcher("vistas/Llamadas.jsp");
         dispatcher.forward(request, response);
@@ -66,7 +74,7 @@ public class ControladorRegistro extends HttpServlet {
             throws IOException {
         try {
             int idLlamada = Integer.parseInt(request.getParameter("idLlamada"));
-            RegistroLlamadas llamada = dao.buscarPorId(idLlamada);
+            RegistroLlamadas llamada = daoLlamada.buscarPorId(idLlamada);
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
@@ -103,7 +111,7 @@ public class ControladorRegistro extends HttpServlet {
             throws IOException, ServletException {
         try {
             int idLlamada = Integer.parseInt(request.getParameter("id"));
-            boolean eliminado = dao.eliminar(idLlamada);
+            boolean eliminado = daoLlamada.eliminar(idLlamada);
 
             if (eliminado) {
                 response.sendRedirect("ControladorRegistro?accion=listar");
@@ -130,7 +138,7 @@ public class ControladorRegistro extends HttpServlet {
             llamada.setIdAgente(Integer.parseInt(request.getParameter("idAgente")));
             llamada.setIdCategoria(Integer.parseInt(request.getParameter("idCategoria")));
 
-            boolean guardado = dao.agregar(llamada);
+            boolean guardado = daoLlamada.agregar(llamada);
 
             if (guardado) {
                 response.sendRedirect("ControladorRegistro?accion=listar");
@@ -142,6 +150,42 @@ public class ControladorRegistro extends HttpServlet {
             response.sendRedirect("ControladorRegistro?accion=listar");
         }
     }
+
+    // Método para listar los seguimientos de una llamada
+    private void listarSeguimientos(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int idLlamada = Integer.parseInt(request.getParameter("idLlamada"));
+        List<Seguimiento> listaSeguimientos = daoSeguimiento.listarPorLlamada(idLlamada);
+        request.setAttribute("seguimientos", listaSeguimientos);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("vistas/Seguimientos.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    // Método para guardar un seguimiento
+    private void guardarSeguimiento(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        try {
+            Seguimiento seguimiento = new Seguimiento();
+            int idLlamada = Integer.parseInt(request.getParameter("idLlamada"));
+            String acciones = request.getParameter("acciones");
+            String resultadoFinal = request.getParameter("resultadoFinal");
+            Timestamp fechaSeguimiento = new Timestamp(System.currentTimeMillis()); // Fecha actual
+
+            seguimiento.setIdLlamada(idLlamada);
+            seguimiento.setAcciones(acciones);
+            seguimiento.setResultadoFinal(resultadoFinal);
+            seguimiento.setFechaSeguimiento(fechaSeguimiento);
+
+            boolean guardado = daoSeguimiento.agregar(seguimiento);
+
+            if (guardado) {
+                response.sendRedirect("ControladorRegistro?accion=seguimiento&idLlamada=" + idLlamada);
+            } else {
+                request.setAttribute("mensaje", "Error al guardar el seguimiento.");
+                listarSeguimientos(request, response);
+            }
+        } catch (Exception e) {
+            response.sendRedirect("ControladorRegistro?accion=seguimiento");
+        }
+    }
 }
-
-

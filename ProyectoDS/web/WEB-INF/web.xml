@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
-         version="6.0">
-        
-
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <!-- Configuración de servlets -->
     <servlet>
         <servlet-name>DashboardController</servlet-name>
         <servlet-class>Controladores.DashboardController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControladorTicket</servlet-name>
+        <servlet-class>Controladores.ControladorTicket</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ControladorLlamada</servlet-name>
+        <servlet-class>Controladores.ControladorLlamada</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DashboardController</servlet-name>
@@ -22,7 +25,6 @@
         <servlet-name>ControladorCliente</servlet-name>
         <url-pattern>/ControladorCliente</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>ControladorEncuesta</servlet-name>
         <servlet-class>Controladores.ControladorEncuesta</servlet-class>
@@ -31,7 +33,6 @@
         <servlet-name>ControladorEncuesta</servlet-name>
         <url-pattern>/ControladorEncuesta</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>ControladorRegistro</servlet-name>
         <servlet-class>Controladores.ControladorRegistro</servlet-class>
@@ -40,7 +41,6 @@
         <servlet-name>ControladorRegistro</servlet-name>
         <url-pattern>/ControladorRegistro</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>ControladorAgente</servlet-name>
         <servlet-class>Controladores.ControladorAgente</servlet-class>
@@ -49,17 +49,20 @@
         <servlet-name>ControladorAgente</servlet-name>
         <url-pattern>/ControladorAgente</url-pattern>
     </servlet-mapping>
-
-
     <!-- Configuración de la sesión -->
+    <servlet-mapping>
+        <servlet-name>ControladorTicket</servlet-name>
+        <url-pattern>/ControladorTicket</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ControladorLlamada</servlet-name>
+        <url-pattern>/ControladorLlamada</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-
     <!-- Archivos de bienvenida -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-
 </web-app>
-

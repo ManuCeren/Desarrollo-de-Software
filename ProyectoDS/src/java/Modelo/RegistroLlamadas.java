@@ -3,6 +3,8 @@ package Modelo;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;  // Importamos List para almacenar los seguimientos
 
 public class RegistroLlamadas {
     // Atributos
@@ -16,6 +18,9 @@ public class RegistroLlamadas {
     private int idCliente;
     private int idAgente;
     private int idCategoria;
+    
+    // Relación con los seguimientos
+    private List<Seguimiento> seguimientos;
 
     // Constructor vacío
     public RegistroLlamadas() {}
@@ -23,7 +28,7 @@ public class RegistroLlamadas {
     // Constructor completo
     public RegistroLlamadas(int idLlamada, Timestamp fechaHoraLlamada, Time horaInicio, Time horaFinal,
                             String motivoLlamada, String solucion, String estado, int idCliente,
-                            int idAgente, int idCategoria) {
+                            int idAgente, int idCategoria, List<Seguimiento> seguimientos) {
         this.idLlamada = idLlamada;
         this.fechaHoraLlamada = fechaHoraLlamada;
         this.horaInicio = horaInicio;
@@ -34,6 +39,17 @@ public class RegistroLlamadas {
         this.idCliente = idCliente;
         this.idAgente = idAgente;
         this.idCategoria = idCategoria;
+        this.seguimientos = seguimientos;
+    }
+    public RegistroLlamadas(int idLlamada, Timestamp fechaHoraLlamada, Time horaInicio, Time horaFinal,
+                            String motivoLlamada, String solucion, String estado) {
+        this.idLlamada = idLlamada;
+        this.fechaHoraLlamada = fechaHoraLlamada;
+        this.horaInicio = horaInicio;
+        this.horaFinal = horaFinal;
+        this.motivoLlamada = motivoLlamada;
+        this.solucion = solucion;
+        this.estado = estado;
     }
 
     // Constructor básico (sin ID)
@@ -129,5 +145,21 @@ public class RegistroLlamadas {
 
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
+    }
+
+    public List<Seguimiento> getSeguimientos() {
+        return seguimientos;
+    }
+
+    public void setSeguimientos(List<Seguimiento> seguimientos) {
+        this.seguimientos = seguimientos;
+    }
+
+    // Método para agregar un seguimiento a la llamada
+    public void agregarSeguimiento(Seguimiento seguimiento) {
+        if (this.seguimientos == null) {
+            this.seguimientos = new ArrayList<>();
+        }
+        this.seguimientos.add(seguimiento);
     }
 }
