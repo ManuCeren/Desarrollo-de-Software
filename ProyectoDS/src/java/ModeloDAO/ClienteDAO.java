@@ -71,7 +71,7 @@ public class ClienteDAO implements CRUDCliente{
     public boolean add(Cliente cliente) {
         String sql = "INSERT INTO cliente (nombre_Cliente, apellido_Cliente, telefono, correo, direccion, fecha_Registro) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            con = cn.getConnection(); // Establece conexión
+            con = cn.getConnection();
             ps = con.prepareStatement(sql);
             ps.setString(1, cliente.getNombreCliente());
             ps.setString(2, cliente.getApellidoCliente());
@@ -79,11 +79,11 @@ public class ClienteDAO implements CRUDCliente{
             ps.setString(4, cliente.getCorreo());
             ps.setString(5, cliente.getDireccion());
             ps.setString(6, cliente.getFechaRegistro());
-            ps.executeUpdate(); // Ejecuta la consulta
-            return true; // Indica que la operación fue exitosa
+            int filasAfectadas = ps.executeUpdate(); // Verificación de la cantidad de filas afectadas
+            return filasAfectadas > 0; // Si se afectó alguna fila, el cliente se insertó
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepciones
-            return false; // Indica que hubo un error
+            e.printStackTrace();
+            return false;
         } finally {
             try {
                 if (ps != null) ps.close();
@@ -93,48 +93,98 @@ public class ClienteDAO implements CRUDCliente{
             }
         }
     }
+
+    
     @Override
     public Cliente list(int id) {
-        String sql="select * from cliente where id_Cliente="+id;
+        Cliente cli = new Cliente(); // Creación de nuevo objeto
+        String sql = "SELECT * FROM cliente WHERE id_Cliente=?";
         try {
-            con=cn.getConnection();
-            ps=con.prepareStatement(sql);
-            rs=ps.executeQuery();
-            while(rs.next()){ 
-                c.setIdCliente(rs.getInt("id_Cliente"));
-                c.setNombreCliente(rs.getString("nombre_Cliente"));
-                c.setApellidoCliente(rs.getString("apellido_Cliente"));
-                c.setTelefono(rs.getString("telefono"));
-                c.setCorreo(rs.getString("correo"));
-                c.setDireccion(rs.getString("direccion"));
-                c.setFechaRegistro(rs.getString("fecha_Registro"));
-                
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                cli.setIdCliente(rs.getInt("id_Cliente"));
+                cli.setNombreCliente(rs.getString("nombre_Cliente"));
+                cli.setApellidoCliente(rs.getString("apellido_Cliente"));
+                cli.setTelefono(rs.getString("telefono"));
+                cli.setCorreo(rs.getString("correo"));
+                cli.setDireccion(rs.getString("direccion"));
+                cli.setFechaRegistro(rs.getString("fecha_Registro"));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return c;
+        return cli;
     }
+
+    
     @Override
     public boolean eliminar(int id) {
-        String sql="delete from cliente where id_Cliente="+id;
+        Connection con = null;
+        PreparedStatement ps = null;
+        boolean eliminado = false;
+
         try {
-            con=cn.getConnection();
-            ps=con.prepareStatement(sql);
-            ps.executeUpdate();
-        } catch (Exception e) {
+            con = cn.getConnection();
+            // Cambié 'clientes' por 'cliente'
+            String sql = "DELETE FROM cliente WHERE id_Cliente=?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                eliminado = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return false;
+        return eliminado;
     }
+    
     @Override
     public boolean edit(Cliente cli) {
-        String sql="update cliente set nombre_Cliente='"+cli.getNombreCliente()+"',apellido_Cliente='"+cli.getApellidoCliente()+"', telefono='"+cli.getTelefono() +"', correo='"+cli.getCorreo()+"',direccion='"+cli.getDireccion()+"',fecha_Registro='"+cli.getFechaRegistro()+"'where id_Cliente="+cli.getIdCliente();
+            String sql = "UPDATE cliente SET nombre_Cliente=?, apellido_Cliente=?, telefono=?, correo=?, direccion=?, fecha_Registro=? WHERE id_Cliente=?";
         try {
-            con=cn.getConnection();
-            ps=con.prepareStatement(sql);
-            ps.executeUpdate();
-        } catch (Exception e) {
+            con = cn.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, cli.getNombreCliente());
+            ps.setString(2, cli.getApellidoCliente());
+            ps.setString(3, cli.getTelefono());
+            ps.setString(4, cli.getCorreo());
+            ps.setString(5, cli.getDireccion());
+            ps.setString(6, cli.getFechaRegistro());
+            ps.setInt(7, cli.getIdCliente());
+
+            int filasActualizadas = ps.executeUpdate();
+            return filasActualizadas > 0; // Devuelve true si se actualizó al menos una fila
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Devuelve false si ocurre un error
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return false;
     }
 }
 

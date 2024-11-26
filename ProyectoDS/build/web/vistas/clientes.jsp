@@ -125,8 +125,8 @@
                         <td>${cliente.direccion}</td>
                         <td>${cliente.fechaRegistro}</td>
                         <td class="text-center">
-                                <a class="btn btn-warning" href="ControladorCliente?accion=editar&id=${cliente.idCliente}">Editar</a>
-                                <a class="btn btn-danger" href="Controlador?accion=eliminar&id=${cliente.idCliente}>">Eliminar</a>
+                            <a class="btn btn-warning" href="ControladorCliente?accion=editar&id=${cliente.idCliente}">Editar</a>
+                            <a class="btn btn-danger" href="ControladorCliente?accion=eliminar&id=${cliente.idCliente}">Eliminar</a>
                         </td>
                     </tr>
                 </c:forEach>

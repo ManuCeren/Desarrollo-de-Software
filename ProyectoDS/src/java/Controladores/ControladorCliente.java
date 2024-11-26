@@ -7,9 +7,6 @@ package Controladores;
 
 import Modelo.Cliente;
 import ModeloDAO.ClienteDAO;
-import ModeloDAO.RegistroLlamadasDAO;
-
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,39 +14,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "ControladorCliente", urlPatterns = {"/ControladorCliente"})
 public class ControladorCliente extends HttpServlet {
 
-    String listar="vistas/listar.jsp";
-    String cliente="vistas/clientes.jsp";
-    String add="vistas/AddCliente.jsp";
-    String edit="vistas/editCliente.jsp";
+    String cliente = "vistas/clientes.jsp";
+    String add = "vistas/AddCliente.jsp";
+    String edit = "vistas/editCliente.jsp";
 
-    
-    Cliente c =new Cliente();
-    ClienteDAO dao=new ClienteDAO();
+    Cliente c = new Cliente();
+    ClienteDAO dao = new ClienteDAO();
     int id;
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Controlador</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Controlador at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,17 +33,7 @@ public class ControladorCliente extends HttpServlet {
         String action = request.getParameter("accion");
 
         try {
-            if (action == null) {
-                 ClienteDAO clienteDAO = new ClienteDAO();
-                int totalClientes = clienteDAO.contarClientes();
-
-                // Configura el atributo para hacerlo visible en el JSP
-                request.setAttribute("totalClientes", totalClientes);
-                RegistroLlamadasDAO llamadasDAO = new RegistroLlamadasDAO();
-                
-                int totalLlamadas = llamadasDAO.contarLlamadas();
-                request.setAttribute("totalLlamadas", totalLlamadas);
-
+            if (action == null || action.isEmpty()) {
                 // Redirige al index.jsp
                 RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
                 dispatcher.forward(request, response);
@@ -80,48 +46,71 @@ public class ControladorCliente extends HttpServlet {
                     break;
 
                 case "clientes":
-                    // Llama al método listar de ClienteDAO
+                    // Cargar la lista de clientes
                     List<Cliente> listaClientes = dao.listar();
                     request.setAttribute("clientes", listaClientes);
-
-                    // Llama al método de conteo de clientes
-                    int totalClientes = dao.contarClientes();
-                    request.setAttribute("totalClientes", totalClientes);
 
                     acceso = cliente;
                     break;
 
                 case "editar":
-                    // Obtiene el ID del cliente a editar
-                    request.setAttribute("idcli", request.getParameter("id"));
-                    acceso = edit;
+                    String idcliParam = request.getParameter("id");
+                    if (idcliParam != null && !idcliParam.isEmpty()) {
+                        request.setAttribute("idcli", idcliParam);
+                        acceso = edit;
+                    } else {
+                        // Si idcli no es válido, redirigir a la lista de clientes o mostrar error
+                        request.setAttribute("error", "ID de cliente no proporcionado o inválido.");
+                        acceso = "vistas/error.jsp";
+                    }
                     break;
-                    
-                case "Actualizar":
-                    // Obtiene el ID del cliente a editar
-                        id=Integer.parseInt(request.getParameter("txtid"));
-                        String nom=request.getParameter("txtNom");
-                        String ape=request.getParameter("txtApe");
-                        String tel=request.getParameter("txtTel");
-                        String email=request.getParameter("txtCorreo");
-                        String direc=request.getParameter("txtdireccion");
-                        String fecha=request.getParameter("txtfecha");
-                        c.setIdCliente(id);
-                        c.setNombreCliente(nom);
-                        c.setApellidoCliente(ape);
-                        c.setTelefono(tel);
-                        c.setCorreo(email);
-                        c.setDireccion(direc);
-                        c.setFechaRegistro(fecha);
-                        dao.edit(c);
-                        acceso=listar;
+
+                case "actualizar":
+                    id = Integer.parseInt(request.getParameter("txtid"));
+                    String nom = request.getParameter("txtNom");
+                    String ape = request.getParameter("txtApe");
+                    String tel = request.getParameter("txtTel");
+                    String email = request.getParameter("txtCorreo");
+                    String direc = request.getParameter("txtDireccion");
+                    String fecha = request.getParameter("txtFecha");
+
+                    c.setIdCliente(id);
+                    c.setNombreCliente(nom);
+                    c.setApellidoCliente(ape);
+                    c.setTelefono(tel);
+                    c.setCorreo(email);
+                    c.setDireccion(direc);
+                    c.setFechaRegistro(fecha);
+
+                    boolean actualizado = dao.edit(c);
+
+                    if (actualizado) {
+                        // Si se actualizó correctamente, recargar lista de clientes
+                        List<Cliente> listaActualizada = dao.listar();
+                        request.setAttribute("clientes", listaActualizada);
+                        acceso = cliente;
+                    } else {
+                        request.setAttribute("error", "Error al actualizar el cliente.");
+                        acceso = "vistas/error.jsp";
+                    }
+                    break;
+
+                case "eliminar":
+                    id = Integer.parseInt(request.getParameter("id"));
+                    dao.eliminar(id);
+
+                    // Recargar la lista de clientes
+                    List<Cliente> listaDespuesEliminacion = dao.listar();
+                    request.setAttribute("clientes", listaDespuesEliminacion);
+
+                    acceso = cliente;
                     break;
 
                 default:
                     acceso = "index.jsp"; // Si la acción no es válida, redirige al inicio
             }
         } catch (Exception e) {
-            // Manejo de error: Redirige a una página de error o muestra mensaje
+            e.printStackTrace();
             request.setAttribute("error", "Ocurrió un error al procesar la solicitud.");
             acceso = "vistas/error.jsp";
         }
@@ -131,12 +120,10 @@ public class ControladorCliente extends HttpServlet {
         vista.forward(request, response);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("accion");
-        String acceso = "";
 
         if (action.equalsIgnoreCase("add")) {
             // Obtén los parámetros del formulario
@@ -161,23 +148,21 @@ public class ControladorCliente extends HttpServlet {
 
             // Redirige según el resultado
             if (agregado) {
-                request.setAttribute("mensaje", "Cliente agregado exitosamente.");
+                List<Cliente> listaClientesAgregados = dao.listar();
+                request.setAttribute("clientes", listaClientesAgregados);
             } else {
-                request.setAttribute("mensaje", "Error al agregar el cliente.");
+                request.setAttribute("error", "Error al agregar el cliente.");
             }
 
-            acceso = "vistas/clientes.jsp"; // Después de agregar, se puede redirigir a la lista de clientes
+            RequestDispatcher vista = request.getRequestDispatcher(cliente);
+            vista.forward(request, response);
         }
-
-        RequestDispatcher vista = request.getRequestDispatcher(acceso);
-        vista.forward(request, response);
     }
 
-   
+
     @Override
     public String getServletInfo() {
         return "Controlador de clientes";
-    }// </editor-fold>
-
+    }
 }
 
